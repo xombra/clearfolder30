@@ -5,7 +5,7 @@
 
 if [[ $USER != root ]]; then
 	echo -e "\e[00;31mERROR: You must be root to run script\e[00m"
-		echo -e "\e[00;31mERROR: Debes ser ROOT para ejecutar el script\e[00m"
+	echo -e "\e[00;31mERROR: Debes ser ROOT para ejecutar el script\e[00m"
 	exit 1
 fi
 
