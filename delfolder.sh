@@ -1,40 +1,83 @@
 #!/bin/bash
-# by Xombra
+# by Xombra & sinfallas
 # Licence: GPL-2
 # Clear contents of a folder every 30 min
-
+#
+# Para revisar y eliminar archivos conforme a fecha
+# Minutos -> -30 min
+# Dias -> -2 days
+# Mes -> -3 mounth
+# años -> -1 year
+# $1 es directorio
+# uso delfolder.sh directorio numero escala
+#
+LC_ALL=C
 if [[ $USER != root ]]; then
-	echo -e "\e[00;31mERROR: You must be root to run script\e[00m"
-	echo -e "\e[00;31mERROR: Debes ser ROOT para ejecutar el script\e[00m"
+	echo -e "\e[00;31mERROR: Debes ejecutar el Script como ROOT\e[00m"
+	exit 1
+fi
+trap "rm -f /run/$0.pid; exit" INT TERM EXIT
+echo "$BASHPID" > /run/$0.pid
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+log="/var/log/tempBorrados.log"
+fechaactual=$(date)
+
+if ! [[ -f "$log" ]]; then
+	echo "Creado este archivo el: $fechaactual" > "$log"
+fi
+if [[ -z $1 ]]; then
+	echo "ERROR: Debes indicar carpeta" >> "$log"
+	exit 1
+fi
+if [[ -z $2 ]]; then
+	echo "ERROR: Debes indicar tiempo" >> "$log"
 	exit 1
 fi
 
-fechaactualmenos30min=$(date +%s --date='-30 min')
-fechaactual=$(date)
-SAVEIF=$IFS
+case "$3" in
+	min)
+		echo "1" > /dev/null
+		;;	
 
-directorio="temporales"
+	day)
+		echo "1" > /dev/null
+		;;
 
-IFS=$(echo -en "\n\b")
+	year)
+		echo "1" > /dev/null
+		;;
 
-if [ -d $directorio ]; then
+	month)
+		echo "1" > /dev/null
+		;;
 
-	for file in $(ls $directorio)
-		do
+	*)
+		echo "ERROR: Debes indicar escala de tiempo" >> "$log"
+		exit 1
+		;;
+esac
 
-			archivo=${file%%}
-			fechaarchivo=$(stat -c "%Y" $archivo)
-			fechafile=${fechaarchivo%% *}
-			if [ $fechaactualmenos30min -gt $fechaarchivo ]; then
-				rm -f -R  $directorio/$archivo
-				echo "Eliminado fecha - $fechaactual | Archivo $archivo" >> /var/log/tempBorrados.log
-			fi
+fechaactualmenos30min=$(date +%s --date="-$(echo "$2") $(echo "$3")")
+if [[ $? != 0 ]]; then
+	echo "ERROR: Parametros invalidos en tiempo" >> "$log"
+	exit 1
+fi
 
-		done
-
+if [[ -d "$1" ]]; then
+	for file in $(ls "$1"); do
+		if (( "$fechaactualmenos30min" > $(date '+%s' -r "$1/$file") )); then
+			chmod 666 $1/$file
+			rm -rf $1/$file
+			echo "Eliminado en fecha: $fechaactual - Archivo: $file" >> "$log"
+		fi
+	done
+	echo "===================" >> "$log"
 else
-	echo "No existe el Directorio -> $directorio "
+	echo "No existe el directorio $1" >> "$log"
 fi
 
 IFS=$SAVEIFS
+rm -f /run/$0.pid
+trap - INT TERM EXIT
 exit 0
