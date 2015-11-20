@@ -56,7 +56,6 @@ case "$3" in
 		echo "ERROR: Debes indicar escala de tiempo" >> "$log"
 		exit 1
 		;;
-esac
 
 fechaactualmenos30min=$(date +%s --date="-$(echo "$2") $(echo "$3")")
 if [[ $? != 0 ]]; then
