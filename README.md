@@ -1,5 +1,5 @@
 # clearfolder30
-Eliminar archivos de una carpeta que archivos tengan mas de 30 minutos 
+Eliminar archivos de una carpeta que archivos tengan mas de x minutos, dias, meses, años 
 
  Para revisar y eliminar archivos conforme a fecha
 
