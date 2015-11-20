@@ -1,4 +1,7 @@
 # clearfolder30
+
+[![DOI](https://zenodo.org/badge/19310/xombra/clearfolder30.svg)](https://zenodo.org/badge/latestdoi/19310/xombra/clearfolder30)
+
 Eliminar archivos de una carpeta que archivos tengan mas de x minutos, dias, meses, años 
 
  Para revisar y eliminar archivos conforme a fecha
