@@ -21,7 +21,7 @@ if [ -d $directorio ]; then
 			fechafile=${fechaarchivo%% *}
 			echo "* $fechaarchivo | $fechaactualmenos30min"
 			if [ $fechaarchivo -lt $fechaactualmenos30min ]; then
-				rm -f -R  temporales/$archivo
+				rm -f -R  $directorio/$archivo
 				echo "Eliminado fecha - $fechaactual | Archivo $archivo" >> /var/log/tempBorrados.log
 			fi
 
