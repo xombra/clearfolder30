@@ -3,6 +3,12 @@
 # Licence: GPL-2
 # Clear contents of a folder every 30 min
 
+if [[ $USER != root ]]; then
+	echo -e "\e[00;31mERROR: You must be root to run script\e[00m"
+		echo -e "\e[00;31mERROR: Debes ser ROOT para ejecutar el script\e[00m"
+	exit 1
+fi
+
 fechaactualmenos30min=$(date +%s --date='-30 min')
 fechaactual=$(date)
 SAVEIF=$IFS
@@ -19,7 +25,6 @@ if [ -d $directorio ]; then
 			archivo=${file%%}
 			fechaarchivo=$(stat -c "%Y" $archivo)
 			fechafile=${fechaarchivo%% *}
-			echo "* $fechaarchivo | $fechaactualmenos30min"
 			if [ $fechaactualmenos30min -gt $fechaarchivo ]; then
 				rm -f -R  $directorio/$archivo
 				echo "Eliminado fecha - $fechaactual | Archivo $archivo" >> /var/log/tempBorrados.log
